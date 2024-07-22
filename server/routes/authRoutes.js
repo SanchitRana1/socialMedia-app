@@ -7,7 +7,7 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 //LOGIN
-router.route("/login").post(verifyToken,async (req, res) => {
+router.route("/login").post(async (req, res) => {
   try {
     const { email, password } = req.body;
 
