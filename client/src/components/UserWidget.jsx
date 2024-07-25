@@ -8,6 +8,7 @@ import {
 import UserImage from "./UserImage";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { USERS_API } from "../utils/constants";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
@@ -19,7 +20,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const navigate = useNavigate();
 
   const getUser = async () => {
-    const response = await fetch("http://localhost:5000/users/" + userId, {
+    const response = await fetch(`${USERS_API}/` + userId, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

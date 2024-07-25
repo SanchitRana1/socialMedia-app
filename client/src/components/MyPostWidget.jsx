@@ -13,6 +13,7 @@ import UserImage from "./UserImage";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "@mui/material";
 import { setPosts } from "../utils/userSlice";
+import { POSTS_API } from "../utils/constants";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
-    const response = await fetch("http://localhost:5000/posts", {
+    const response = await fetch(`${POSTS_API}`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,

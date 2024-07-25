@@ -1,9 +1,10 @@
 import React from 'react'
+import { ASSETS_API } from '../utils/constants'
 
 const UserImage = (image) => {
   return (
     <div className="mx-2 w-14">
-        <img className="w-14 h-14 object-cover rounded-full" src={`http://localhost:5000/assets/${image.image}`} alt="user" />
+        <img className="w-14 h-14 object-cover rounded-full" src={`${ASSETS_API}/${image.image}`} alt="user" />
     </div>
   )
 }

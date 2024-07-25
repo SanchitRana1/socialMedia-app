@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PostCard from './PostCard';
 import { setPosts } from '../utils/userSlice';
+import { POSTS_API } from '../utils/constants';
 
 const PostsWidget = ({userId, isProfile=false}) => {
     const dispatch = useDispatch();
     const { token,posts } = useSelector((store) => store?.user);
 
     const getPosts = async()=>{
-        const response = await fetch("http://localhost:5000/posts",{
+        const response = await fetch(`${POSTS_API}`,{
             method:"GET",
             headers:{
                 Authorization:`Bearer ${token}`
@@ -19,7 +20,7 @@ const PostsWidget = ({userId, isProfile=false}) => {
     }
     
     const getUserPosts = async()=>{
-        const response = await fetch(`http://localhost:5000/posts/${userId}`,{
+        const response = await fetch(`${POSTS_API}/${userId}`,{
             method:"GET",
             headers:{
                 Authorization:`Bearer ${token}`

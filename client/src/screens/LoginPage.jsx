@@ -7,8 +7,8 @@ const LoginPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const theme = useSelector((store)=>store?.app?.mode)
   return (
-    <div className="text-black">
-      <div className={"bg-[#fffffffe] form p-6 my-8 mx-auto rounded-lg "+(isNonMobileScreens ? "w-[50%]" :"w-[100%]")}>
+    <div className="text-black ">
+      <div className={`bg-[#ffffffeb] form p-6 my-8 mx-auto rounded-lg ${isNonMobileScreens ? "w-[50%]" :"w-[100%]"}`}>
         <p className="font-medium text-xl text-center mb-8">Welcome to SocioPedia </p>
         <Form />
       </div>

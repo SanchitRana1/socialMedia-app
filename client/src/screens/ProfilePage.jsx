@@ -7,6 +7,7 @@ import PostsWidget from '../components/PostsWidget';
 import AdvertWidget from '../components/AdvertWidget';
 import FriendListWidget from '../components/FriendListWidget';
 import { useParams } from 'react-router-dom';
+import { USERS_API } from '../utils/constants';
 
 const ProfilePage = () => {
   const [user,setUser] = useState(null)
@@ -16,7 +17,7 @@ const ProfilePage = () => {
   const { _id, picturePath } = useSelector((store) => store?.user?.user);
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:5000/users/${userId}` , {
+    const response = await fetch(`${USERS_API}/${userId}` , {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

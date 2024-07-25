@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { TextField, useMediaQuery } from "@mui/material";
 import { setLogin } from "../utils/userSlice";
+import { AUTH_API } from "../utils/constants";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -45,35 +46,37 @@ const Form = () => {
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
-    const formData = new FormData();//allows us to send form info with image
-    for(let value in values){
-        formData.append(value,values[value])
+    const formData = new FormData(); //allows us to send form info with image
+    for (let value in values) {
+      formData.append(value, values[value]);
     }
-    formData.append("picturePath",values.picture.name);
+    formData.append("picturePath", values.picture.name);
 
-    const response = await fetch("http://localhost:5000/auth/register",{
-      method:"POST",
-      body:formData
-    })
+    const response = await fetch(`${AUTH_API}/register`, {
+      method: "POST",
+      body: formData,
+    });
     const savedUser = await response.json();
     onSubmitProps.resetForm();
 
-    if(savedUser){
-      setPageType("login")
+    if (savedUser) {
+      setPageType("login");
     }
   };
   const login = async (values, onSubmitProps) => {
-    const response = await fetch("http://localhost:5000/auth/login",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(values)
-    })
+    const response = await fetch(`${AUTH_API}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
     const loggedUser = await response.json();
     onSubmitProps.resetForm();
 
-    if(loggedUser){
-      dispatch(setLogin({user:loggedUser.data?.user , token:loggedUser.data?.token}))
-      navigate("/home")
+    if (loggedUser) {
+      dispatch(
+        setLogin({ user: loggedUser.data?.user, token: loggedUser.data?.token })
+      );
+      navigate("/home");
     }
   };
 
@@ -87,26 +90,30 @@ const Form = () => {
   };
 
   return (
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-        validationSchema={isLogin ? loginSchema : registerSchema}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          setFieldValue,
-          resetForm,
-        }) => {
-             return <form onSubmit={handleSubmit}>
+    <Formik
+      onSubmit={handleFormSubmit}
+      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
+      validationSchema={isLogin ? loginSchema : registerSchema}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        setFieldValue,
+        resetForm,
+      }) => {
+        return (
+          <form className="" onSubmit={handleSubmit}>
             <div className="grid gap-8 grid-cols-2">
               {isRegister && (
                 <>
-                  <TextField 
+                <TextField
+                    className="text-white"
+                    InputProps={{ className: "text-white" }}
+                    InputLabelProps={{ className: "text-white" }}
                     label="First Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -206,7 +213,10 @@ const Form = () => {
               />
             </div>
             <div className="flex flex-col items-center my-4">
-              <button className="w-full px-8 py-2 my-4 text-xl font-medium bg-[#068af5] hover:bg-[#065ef5e4] rounded-md text-white" type="submit">
+              <button
+                className="w-full px-8 py-2 my-4 text-xl font-medium bg-[#068af5] hover:bg-[#065ef5e4] rounded-md text-white"
+                type="submit"
+              >
                 {isLogin ? "LOGIN" : "REGISTER"}
               </button>
               <p
@@ -221,9 +231,10 @@ const Form = () => {
                   : "Already a member? Login here."}
               </p>
             </div>
-          </form>;
-        }}
-      </Formik>
+          </form>
+        );
+      }}
+    </Formik>
   );
 };
 

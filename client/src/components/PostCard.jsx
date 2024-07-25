@@ -11,6 +11,7 @@ import Friend from "./Friend";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPost } from "../utils/userSlice";
+import { ASSETS_API, POSTS_API } from "../utils/constants";
 
 const PostCard = ({
   postId,
@@ -32,7 +33,7 @@ const PostCard = ({
   const likeCount = Object.keys(likes).length;
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:5000/posts/${postId}/like`, {
+    const response = await fetch(`${POSTS_API}/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,7 +58,7 @@ const PostCard = ({
         <img
           className="w-[100%] h-auto rounded-xl"
           alt="postImg"
-          src={`http://localhost:5000/assets/${picturePath}`}
+          src={`${ASSETS_API}/${picturePath}`}
         />
       )}
 

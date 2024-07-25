@@ -5,20 +5,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setFriends } from "../utils/userSlice";
 import UserImage from "./UserImage";
+import { USERS_API } from "../utils/constants";
 
-const Friend = ({ firendId, name, subtitle, userPicturePath }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
   const { _id, friends } = useSelector((store) => store?.user?.user);
-  const { token } = useSelector((store) => store?.user);
-  const isFriend = friends?.find((friend) => friend?._id === firendId);
+  const { token,user } = useSelector((store) => store?.user);
+  const isFriend = friends?.find((friend) => friend?._id === friendId);
   const theme = useSelector((store) => store?.app?.mode);
   const textPrimary = theme==="dark" ? "text-[#f2f2f2]" : "text-[#404040]"
   const textMedium = theme==="dark" ? "text-[#c9c9c9]" : "text-[gray]"
   const patchFriend = async () => {
     const response = await fetch(
-      `http://localhost:5000/users/${_id}/${firendId}`,
+      `${USERS_API}/${_id}/${friendId}`,
       {
         method: "PATCH",
         headers: {
@@ -37,7 +38,7 @@ const Friend = ({ firendId, name, subtitle, userPicturePath }) => {
         <div
           className="cursor-pointer"
           onClick={() => {
-            navigate(`/profile/${firendId}`);
+            navigate(`/profile/${friendId}`);
             navigate(0);
           }}
         >
@@ -45,7 +46,7 @@ const Friend = ({ firendId, name, subtitle, userPicturePath }) => {
           <p className={`text-sm text-[#747474] ${textMedium}`}>{subtitle}</p>
         </div>
       </div>
-      {_id!==firendId && <button onClick={patchFriend} className="p-3 bg-[#e9e9e9] rounded-full">
+      {_id!==friendId && <button onClick={patchFriend} className="p-3 bg-[#e9e9e9] rounded-full">
         {isFriend ? <PersonRemoveOutlined className={`${theme==="dark"?"text-black":""}`}/> : <PersonAddOutlined className={`text-black`}/>}
       </button>}
       
