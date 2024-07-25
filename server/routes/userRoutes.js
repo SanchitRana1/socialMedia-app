@@ -9,7 +9,7 @@ const router = express.Router();
 // READ
 router.route("/:id").get(verifyToken, async (req, res) => {
   try {
-    const { id } = req.params();
+    const { id } = req.params;
     const user = await User.findById(id); //getting userInfo by id
     res.status(201).json({ success: true, data: user });
   } catch (error) {
@@ -19,9 +19,9 @@ router.route("/:id").get(verifyToken, async (req, res) => {
 
 router.route("/:id/friends").get(verifyToken, async (req, res) => {
   try {
-    const { id } = req.params();
+    const { id } = req.params;
     const user = await User.findById(id);//getting userInfo by id
-    const friends = Promise.all(user.friends.map((id) => User.findById(id)));
+    const friends = await  Promise.all(user.friends.map((id) => User.findById(id)));
     const formattedFriends = friends.map(
       ({ _id, firstName, lastName, occupation, location, picturePath }) => {
         return { _id, firstName, lastName, occupation, location, picturePath };
@@ -36,7 +36,7 @@ router.route("/:id/friends").get(verifyToken, async (req, res) => {
 // UPDATE
 router.route("/:id/:friendId").patch(verifyToken, async (req, res) => {
   try {
-    const { id,friendId } = req.params();
+    const { id,friendId } = req.params;
     const user = await User.findById(id);//getting userInfo by id
     const friend = await User.findById(friendId);//getting user friends Info by id
    //checking if user friendlist contains the friend
@@ -50,7 +50,7 @@ router.route("/:id/:friendId").patch(verifyToken, async (req, res) => {
     await user.save(); //saving changes made for user
     await friend.save();//saving changes made for user's friend
 
-    const friends = Promise.all(user.friends.map((id) => User.findById(id)));
+    const friends = await Promise.all(user.friends.map((id) => User.findById(id)));
     const formattedFriends = friends.map(
       ({ _id, firstName, lastName, occupation, location, picturePath }) => {
         return { _id, firstName, lastName, occupation, location, picturePath };

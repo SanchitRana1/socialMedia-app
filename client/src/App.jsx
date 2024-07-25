@@ -11,10 +11,12 @@ function App() {
   const isAuth = Boolean(useSelector((store)=>store?.user?.token))
   
   return (
-    <div className={theme==="dark" ? "bg-[#252525] text-white" : ""}>
+    <div className={`font-rubik ${theme==="dark" ? "bg-[#2e2e2e] text-[#ffffff]" : ""}`}>
       <BrowserRouter>
       <Header/>
-      <main className={"sm:p-8 px-4 py-8 w-full bg-[#f2f3f8] min-h-[calc(100vh-73px)] " + (theme==="dark" ? "bg-[#181717] text-white":"")}>
+      <main
+          className={`sm:p-8 md:px-1 md:py-8 w-full min-h-[calc(100vh-73px)] ${theme === "dark" ? "bg-[#1b1b1b] text-white" : "bg-[#f2f2f2] text-black"}`}
+        >
         <Routes>
           <Route path="/" element={<LoginPage/>}/>
           <Route path="/home" element={isAuth  ? <HomePage/> : <Navigate to={"/"}/>}/>
@@ -24,6 +26,6 @@ function App() {
       </BrowserRouter>
     </div>
   );
-}
+}  
 
 export default App;

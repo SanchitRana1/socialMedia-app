@@ -17,10 +17,6 @@ import userRoutes from "./routes/userRoutes.js"
 import postRoutes from "./routes/postRoutes.js"
 import { verifyToken } from "./middleware/auth.js"
 
-import User from "./models/UserModel.js"
-import Post from "./models/PostModel.js"
-import { posts, users } from "./data/index.js"
-
 /** CONFIGURATION */
 
 const __filename = fileURLToPath(import.meta.url); //to get the file URL
@@ -56,8 +52,8 @@ app.post("/posts",verifyToken, upload.single("picture"),createPost);
 
 //ROUTES
 app.use("/auth",authRoutes);
-app.use("/user",userRoutes);
-app.use("/post",postRoutes);
+app.use("/users",userRoutes);
+app.use("/posts",postRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 5000;

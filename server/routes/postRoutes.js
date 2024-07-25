@@ -19,7 +19,7 @@ router.route("/").get(verifyToken, async (req, res) => {
 });
 
 /*Getting user Posts*/
-router.route("/:userId/posts").get(verifyToken, async (req, res) => {
+router.route("/:userId").get(verifyToken, async (req, res) => {
   try {
     const { userId } = req.params;
     const userPosts = await Post.find({ userId });
@@ -32,7 +32,7 @@ router.route("/:userId/posts").get(verifyToken, async (req, res) => {
   }
 });
 
-router.route("/:id/like").get(verifyToken, async (req, res) => {
+router.route("/:id/like").patch(verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const { userId } = req.body;
@@ -44,7 +44,7 @@ router.route("/:id/like").get(verifyToken, async (req, res) => {
       post.likes.set(userId, true);
     }
 
-    const updatedPost = await post.findByIdAndUpdate(
+    const updatedPost = await Post.findByIdAndUpdate(
       id,
       { likes: post.likes },
       { new: true }

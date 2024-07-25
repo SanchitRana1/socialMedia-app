@@ -107,12 +107,6 @@ const Form = () => {
               {isRegister && (
                 <>
                   <TextField 
-                  // InputLabelProps={{
-                  //   className: "text-white", // Label color
-                  // }}
-                  // InputProps={{
-                  //   className: "text-white", // Text color
-                  // }}
                     label="First Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -175,7 +169,7 @@ const Form = () => {
                         >
                           <input {...getInputProps()} />
                           {!values.picture ? (
-                            <p>Add Pictur Here</p>
+                            <p>Add Picture Here</p>
                           ) : (
                             <div className="flex justify-between items-center">
                               <p>{values?.picture?.name}</p>

@@ -45,7 +45,7 @@ const Header = () => {
         </p>
         {isNonMobileScreens && (
           <div className={"flex items-center justify-between  gap-6 rounded-lg px-4 py-1 " +(dark ? "bg-[#3f3f3f]" : "bg-[#f1efef]")}>
-            <input placeholder="Search..." className={"outline-none "+ (dark ? "text-white bg-[#3f3f3f] ":"bg-[#f1efef]")}/>
+            <input placeholder="Search..." className={`outline-none ${dark ? "text-white bg-[#3f3f3f] ":"bg-[#f1efef]"}`}/>
             <IconButton>
               <Search className={dark? "text-white":""}/>
             </IconButton>
@@ -79,7 +79,7 @@ const Header = () => {
         </IconButton>
       )}
 
-      {!isNonMobileScreens && isMobileMenuToggled ? <div className={"fixed right-0 bottom-0 h-[100%] z-10 max-w-[500px] min-w-[300px] bg-[#f2f3f8] " + (dark ? "bg-[#181816]" :"")}>
+      {!isNonMobileScreens && isMobileMenuToggled ? <div className={`fixed right-0 bottom-0 h-[100%] z-10 max-w-[500px] min-w-[300px] bg-[#f2f3f8] ${dark ? "bg-[#1b1b1b]" :"bg-[#f2f2f2]"}`}>
         <div className="flex justify-end p-4">
         <IconButton  onClick={() => {
             setIsMobileMenuToggled(!isMobileMenuToggled);

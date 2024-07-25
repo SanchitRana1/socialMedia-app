@@ -9,15 +9,16 @@ export const createPost = async(req,res)=>{
         const newPost = await Post.create({
             userId,
             firstName:user.firstName,
-            lastname:user.lastname,
+            lastName:user.lastName,
             location:user.location,
             description,
-            userPicturePath:user.userPicturePath,
+            userPicturePath:user.picturePath,
             picturePath,
             likes:{},
             comments:[]
         })
-
+        console.log(user);
+        console.log(newPost)
         const allPosts = await Post.find();
         if (newPost) {
             res.status(201).json({ success: true, data: allPosts });
