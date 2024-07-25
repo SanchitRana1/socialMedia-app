@@ -60,9 +60,9 @@ app.use("/posts",postRoutes);
 const PORT = process.env.PORT || 5000;
 
 console.log(process.env.NODE_ENV)
-app.get("/test", (req, res) => {
-  res.send("Test route is working");
-});
+app.get("/", (req, res) => {
+  res.send("API is Running");
+  });
 // ************DEPLOY***********
 const __dirname1 = path.resolve()
 if(process.env.NODE_ENV === "production"){
