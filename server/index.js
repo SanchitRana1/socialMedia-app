@@ -21,6 +21,7 @@ import { verifyToken } from "./middleware/auth.js"
 
 const __filename = fileURLToPath(import.meta.url); //to get the file URL
 const __dirname = path.dirname(__filename); //
+
 dotenv.config(); // access .env file
 
 const app = express();
@@ -57,6 +58,23 @@ app.use("/posts",postRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 5000;
+
+
+// ************DEPLOY***********
+const __dirname1 = path.resolve()
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname1,"/client/dist")))
+  app.get("*",(req,res)=>{
+    res.sendFile(path.resolve(__dirname1,"client","dist","index.html"))
+  })
+}
+else{
+  app.get("/", (req, res) => {
+    res.send("API is Running");
+  });
+}
+// ************DEPLOY***********
+
 try {
   connectDB();
   app.listen(PORT, () => {
