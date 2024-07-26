@@ -45,16 +45,31 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  // Function to convert image file to base64 string
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const register = async (values, onSubmitProps) => {
-    const formData = new FormData(); //allows us to send form info with image
-    for (let value in values) {
-      formData.append(value, values[value]);
+    // const formData = new FormData(); //allows us to send form info with image
+    const formData = values;
+    let pictureBase64 = "";
+    if (values.picture) {
+      pictureBase64 = await convertToBase64(values.picture);
     }
-    formData.append("picturePath", values.picture.name);
+    formData.picturePath= pictureBase64;
 
     const response = await fetch(`${AUTH_API}/register`, {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
     });
     const savedUser = await response.json();
     onSubmitProps.resetForm();
@@ -63,6 +78,24 @@ const Form = () => {
       setPageType("login");
     }
   };
+  // const register = async (values, onSubmitProps) => {
+  //   const formData = new FormData(); //allows us to send form info with image
+  //   for (let value in values) {
+  //     formData.append(value, values[value]);
+  //   }
+  //   formData.append("picturePath", values.picture.name);
+
+  //   const response = await fetch(`${AUTH_API}/register`, {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+  //   const savedUser = await response.json();
+  //   onSubmitProps.resetForm();
+
+  //   if (savedUser) {
+  //     setPageType("login");
+  //   }
+  // };
   const login = async (values, onSubmitProps) => {
     const response = await fetch(`${AUTH_API}/login`, {
       method: "POST",

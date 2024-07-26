@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename); //
 dotenv.config(); // access .env file
 
 const app = express();
-app.use(express.json());
+app.use(express.json({limit:"50mb"}));
 app.use(helmet())
 app.use(helmet.crossOriginResourcePolicy({policy:"cross-origin"}))
 app.use(morgan("common"));
@@ -49,7 +49,8 @@ const upload= multer({storage});
 
 // ROUTES with FILES
 app.post("/auth/register",upload.single("picture"),register);
-app.post("/posts",verifyToken, upload.single("picture"),createPost);
+// app.post("/posts",verifyToken, upload.single("picture"),createPost);
+// app.post("/posts",verifyToken,createPost);
 
 //ROUTES
 app.use("/auth",authRoutes);
@@ -59,7 +60,6 @@ app.use("/posts",postRoutes);
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 5000;
 
-console.log(process.env.NODE_ENV)
 app.get("/", (req, res) => {
   res.send("API is Running");
   });

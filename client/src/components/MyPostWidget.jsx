@@ -20,35 +20,79 @@ const MyPostWidget = ({ picturePath }) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
-  const theme = useSelector((store)=>store?.app?.mode)
+  const theme = useSelector((store) => store?.app?.mode);
   const { _id } = useSelector((store) => store?.user?.user);
   const { token } = useSelector((store) => store?.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
+  // Function to convert image file to base64 string
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handlePost = async () => {
-    const formData = new FormData();
-    formData.append("userId", _id);
-    formData.append("description", post);
+    let pictureBase64 = null;
     if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
+      pictureBase64 = await convertToBase64(image);
     }
+    let postData = {
+      userId: _id,
+      description: post,
+      pictureBase64,
+      picturePath: image ? image.name : null,
+    };
     const response = await fetch(`${POSTS_API}`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
     });
     const posts = await response.json();
-    dispatch(setPosts({ posts:posts?.data }));
+    dispatch(setPosts({ posts: posts?.data }));
     setImage(null);
     setPost("");
   };
+
+  // const handlePost = async () => {
+  //   const formData = new FormData();
+  //   formData.append("userId", _id);
+  //   formData.append("description", post);
+  //   if (image) {
+  //     formData.append("picture", image);
+  //     formData.append("picturePath", image.name);
+  //     // formData.append("photo", `data:image/jpeg;base64,${image.name}`);
+  //   }
+  //   const response = await fetch(`${POSTS_API}`, {
+  //     method: "POST",
+  //     headers: { Authorization: `Bearer ${token}` },
+  //     body: formData,
+  //   });
+  //   const posts = await response.json();
+  //   dispatch(setPosts({ posts:posts?.data }));
+  //   setImage(null);
+  //   setPost("");
+  // };
   return (
-    <div className={`px-4 pt-6 pb-3 mb-4 rounded-md ${theme==="dark" ? "bg-[#404040] text-[#ffffff]":"bg-[#ffffff]"}`}>
-      <div className="flex justify-between items-center gap-3">
+    <div
+      className={`px-4 pt-6 pb-3 mb-4 rounded-md ${
+        theme === "dark" ? "bg-[#404040] text-[#ffffff]" : "bg-[#ffffff]"
+      }`}
+    >
+      <div className="flex justify-between items-center gap-2">
+        {/* <div className="basis-[16%]"> */}
         <UserImage image={picturePath} alt="user" />
+        {/* </div> */}
         <input
-          className={`w-full rounded-full py-4 px-4  outline-[#1e36ad82]  ${theme==="dark"?"bg-[#1d1d1d]":"bg-[#e7e7e7]"}`}
+          className={`w-full rounded-full py-3 px-4 outline-[#1e36ad82]  ${
+            theme === "dark" ? "bg-[#1d1d1d]" : "bg-[#e7e7e7]"
+          }`}
           type="text"
           placeholder="What's on your mind"
           onChange={(e) => {
@@ -123,14 +167,19 @@ const MyPostWidget = ({ picturePath }) => {
               <MicOutlined />
               <p>Audio</p>
             </div>
-           
           </>
         ) : (
-            <div className="flex justify-between items-center gap-1">
-                <MoreHorizOutlined/>
-            </div>
+          <div className="flex justify-between items-center gap-1">
+            <MoreHorizOutlined />
+          </div>
         )}
-        <button disabled={!post} className={`text-sm font-semibold bg-[#5fa5de] text-white rounded-full px-2 py-1 cursor-pointer`} onClick={handlePost}>POST</button>
+        <button
+          disabled={!post}
+          className={`text-sm font-semibold bg-[#5fa5de] text-white rounded-full px-2 py-1 cursor-pointer`}
+          onClick={handlePost}
+        >
+          POST
+        </button>
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ const PostCard = ({
   const loggedInUserId = useSelector((store) => store?.user?.user?._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
-
+  
   const patchLike = async () => {
     const response = await fetch(`${POSTS_API}/${postId}/like`, {
       method: "PATCH",
@@ -48,7 +48,7 @@ const PostCard = ({
   return (
     <div className={`px-6 py-4 mb-3 rounded-md ${theme==="dark" ? "bg-[#404040] text-[#ffffff]":"bg-[#ffffff]"}`}>
       <Friend
-        firendId={postUserId}
+        friendId={postUserId}
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
@@ -58,11 +58,11 @@ const PostCard = ({
         <img
           className="w-[100%] h-auto rounded-xl"
           alt="postImg"
-          src={`${ASSETS_API}/${picturePath}`}
+          src={`${picturePath}`}
         />
       )}
 
-      <div className="flex justify-between items-center my-2">
+      <div className="flex justify-between items-center my-4">
         <div className="flex justify-between items-center gap-4">
           <div className="flex justify-between items-center gap-1">
             <button onClick={patchLike}>

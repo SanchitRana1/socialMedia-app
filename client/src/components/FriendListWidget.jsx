@@ -10,7 +10,6 @@ const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { _id, friends } = useSelector((store) => store?.user?.user);
   const { token } = useSelector((store) => store?.user);
-  console.log(friends);
   const theme = useSelector((store) => store?.app?.mode);
 
   const getFriends = async () => {
@@ -33,14 +32,13 @@ const FriendListWidget = ({ userId }) => {
 
   return (
     <div
-      className={`mt-8 px-6 pt-6 pb-3 rounded-md ${
+      className={`mt-8 px-6 pt-6 pb-4 rounded-md ${
         theme === "dark" ? "bg-[#404040] text-[#ffffff]" : "bg-[#ffffff]"
       }`}
     >
       <p className={`mb-6 text-xl font-medium px-4`}>FriendList</p>
       <div className="flex flex-col gap-6">
-        {friends &&
-          friends?.map(
+        { friends?.map(
             ({ _id, firstName, lastName, occupation, picturePath }) => (
               <Friend
                 key={_id}

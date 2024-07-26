@@ -50,6 +50,7 @@ const UserWidget = ({ userId, picturePath }) => {
   } = user.data;
 
 
+
   return (
     <div className={`w-full px-[1.5rem] pt-[1.5rem] pb-[1rem] rounded-lg ${theme==="dark" ? "bg-[#404040] text-[#ffffff]":"bg-[#ffffff]"}`}>
       {/* FIRST ROW */}

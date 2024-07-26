@@ -15,14 +15,14 @@ const HomePage = () => {
   return (
     <div className="w-full">
       <div
-        className={`w-full py-8 px-[5%] gap-2 justify-between ${isNonMobileScreens ? 'flex flex-row' : 'block'}`}
+        className={`w-full py-8 px-[5%] gap-4 justify-between ${isNonMobileScreens ? 'flex flex-row' : 'block'}`}
       >
         <div className={isNonMobileScreens ? 'basis-[26%]' : 'w-full'}>
           <UserWidget userId={_id} picturePath={picturePath} />
         </div>
 
         <div
-          className={`${isNonMobileScreens ? 'basis-[42%]' : 'w-full mt-8'}`}
+          className={`${isNonMobileScreens ? 'basis-[45%]' : 'w-full mt-8'}`}
         >
           <MyPostWidget picturePath={picturePath}/>
           <PostsWidget/>
