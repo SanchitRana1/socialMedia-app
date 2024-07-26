@@ -39,7 +39,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           className="cursor-pointer"
           onClick={() => {
             navigate(`/profile/${friendId}`);
-            navigate(0);
+            // navigate(0);
           }}
         >
           <p className={`text-lg font-semibold ${textPrimary}`}>{name}</p>
