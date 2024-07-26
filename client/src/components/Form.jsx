@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { TextField, useMediaQuery } from "@mui/material";
 import { setLogin } from "../utils/userSlice";
 import { AUTH_API } from "../utils/constants";
+import Loader from "./Loader";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -40,6 +41,7 @@ const initialValuesLogin = {
 const Form = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [pageType, setPageType] = useState("register");
   const isLogin = pageType === "login";
@@ -56,26 +58,30 @@ const Form = () => {
   };
 
   const register = async (values, onSubmitProps) => {
-    // const formData = new FormData(); //allows us to send form info with image
-    const formData = values;
-    let pictureBase64 = "";
-    if (values.picture) {
-      pictureBase64 = await convertToBase64(values.picture);
-    }
-    formData.picturePath= pictureBase64;
+    try {
+      setLoading(true)
+      const formData = values;
+      let pictureBase64 = "";
+      if (values.picture) {
+        pictureBase64 = await convertToBase64(values.picture);
+      }
+      formData.picturePath = pictureBase64;
 
-    const response = await fetch(`${AUTH_API}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    const savedUser = await response.json();
-    onSubmitProps.resetForm();
-
-    if (savedUser) {
-      setPageType("login");
+      const response = await fetch(`${AUTH_API}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const savedUser = await response.json();
+      onSubmitProps.resetForm();
+      if (savedUser) {
+        setPageType("login");
+      }
+    } catch (error) {}
+    finally{
+      setLoading(false)
     }
   };
   // const register = async (values, onSubmitProps) => {
@@ -97,19 +103,28 @@ const Form = () => {
   //   }
   // };
   const login = async (values, onSubmitProps) => {
-    const response = await fetch(`${AUTH_API}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedUser = await response.json();
-    onSubmitProps.resetForm();
+    try {
+      setLoading(true);
+      const response = await fetch(`${AUTH_API}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const loggedUser = await response.json();
+      onSubmitProps.resetForm();
 
-    if (loggedUser) {
-      dispatch(
-        setLogin({ user: loggedUser.data?.user, token: loggedUser.data?.token })
-      );
-      navigate("/home");
+      if (loggedUser) {
+        dispatch(
+          setLogin({
+            user: loggedUser.data?.user,
+            token: loggedUser.data?.token,
+          })
+        );
+        navigate("/home");
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,7 +158,7 @@ const Form = () => {
             <div className="grid gap-8 grid-cols-2">
               {isRegister && (
                 <>
-                <TextField
+                  <TextField
                     className="text-white"
                     InputProps={{ className: "text-white" }}
                     InputLabelProps={{ className: "text-white" }}
@@ -245,6 +260,7 @@ const Form = () => {
                 sx={{ gridColumn: "span 2" }}
               />
             </div>
+            {loading && <Loader />}
             <div className="flex flex-col items-center my-4">
               <button
                 className="w-full px-8 py-2 my-4 text-xl font-medium bg-[#068af5] hover:bg-[#065ef5e4] rounded-md text-white"

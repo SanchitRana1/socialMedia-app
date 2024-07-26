@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "@mui/material";
 import { setPosts } from "../utils/userSlice";
 import { POSTS_API } from "../utils/constants";
+import Loader from "./Loader";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
@@ -24,40 +25,48 @@ const MyPostWidget = ({ picturePath }) => {
   const { _id } = useSelector((store) => store?.user?.user);
   const { token } = useSelector((store) => store?.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const [loading, setLoading] = useState(false);
 
   // Function to convert image file to base64 string
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
+
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
   };
 
   const handlePost = async () => {
-    let pictureBase64 = null;
-    if (image) {
-      pictureBase64 = await convertToBase64(image);
+    try {
+      setLoading(true);
+      let pictureBase64 = null;
+      if (image) {
+        pictureBase64 = await convertToBase64(image);
+      }
+      let postData = {
+        userId: _id,
+        description: post,
+        pictureBase64,
+        picturePath: image ? image.name : null,
+      };
+      const response = await fetch(`${POSTS_API}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+      const posts = await response.json();
+      dispatch(setPosts({ posts: posts?.data }));
+      setImage(null);
+      setPost("");
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
-    let postData = {
-      userId: _id,
-      description: post,
-      pictureBase64,
-      picturePath: image ? image.name : null,
-    };
-    const response = await fetch(`${POSTS_API}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
-    const posts = await response.json();
-    dispatch(setPosts({ posts: posts?.data }));
-    setImage(null);
-    setPost("");
   };
 
   // const handlePost = async () => {
@@ -101,46 +110,53 @@ const MyPostWidget = ({ picturePath }) => {
           value={post}
         />
       </div>
-      {isImage && (
-        <div className={`flex mt-4 p-4  rounded-lg border-2`}>
-          <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png"
-            multiple={false}
-            onDrop={(acceptedFiles) => {
-              setImage(acceptedFiles[0]);
-            }}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <div className="flex justify-between items-center w-full">
-                <div
-                  {...getRootProps()}
-                  className="w-full border-2 border-blue-500 border-dashed p-2 cursor-pointer"
-                >
-                  <input {...getInputProps()} />
-                  {!image ? (
-                    <p>Add Image here</p>
-                  ) : (
-                    <div className="flex justify-between items-center">
-                      <p>{image.name}</p>
-                      <EditOutlined />{" "}
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          {isImage && (
+            <div className={`flex mt-4 p-4  rounded-lg border-2`}>
+              <Dropzone
+                acceptedFiles=".jpg,.jpeg,.png"
+                multiple={false}
+                onDrop={(acceptedFiles) => {
+                  setImage(acceptedFiles[0]);
+                }}
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <div className="flex justify-between items-center w-full">
+                    <div
+                      {...getRootProps()}
+                      className="w-full border-2 border-blue-500 border-dashed p-2 cursor-pointer"
+                    >
+                      <input {...getInputProps()} />
+                      {!image ? (
+                        <p>Add Image here</p>
+                      ) : (
+                        <div className="flex justify-between items-center">
+                          <p>{image.name}</p>
+                          <EditOutlined />{" "}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                {image && (
-                  <div
-                    className=""
-                    onClick={() => {
-                      setImage(null);
-                    }}
-                  >
-                    <DeleteOutline />
+                    {image && (
+                      <div
+                        className=""
+                        onClick={() => {
+                          setImage(null);
+                        }}
+                      >
+                        <DeleteOutline />
+                      </div>
+                    )}
                   </div>
                 )}
-              </div>
-            )}
-          </Dropzone>
-        </div>
+              </Dropzone>
+            </div>
+          )}
+        </>
       )}
+
       <hr className="my-6" />
 
       <div className="flex justify-between items-center">
@@ -178,7 +194,7 @@ const MyPostWidget = ({ picturePath }) => {
           className={`text-sm font-semibold bg-[#5fa5de] text-white rounded-full px-2 py-1 cursor-pointer`}
           onClick={handlePost}
         >
-          POST
+          {!loading ? `POST`:"Posting..." }
         </button>
       </div>
     </div>

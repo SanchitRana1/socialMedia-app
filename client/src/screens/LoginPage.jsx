@@ -2,6 +2,7 @@ import { useMediaQuery } from "@mui/material";
 import React from "react";
 import Form from "../components/Form";
 import { useSelector } from "react-redux";
+import Loader from "../components/Loader";
 
 const LoginPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
