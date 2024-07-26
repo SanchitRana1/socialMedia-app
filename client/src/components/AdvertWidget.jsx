@@ -11,7 +11,7 @@ const AdvertWidget = () => {
             <p className='text-md font-bold'>Sponsered</p>
             <p className='text-sm text-[#a4a4a4]'>Create Ad</p>
         </div>
-        <img className={`w-[100%] h-auto rounded-xl my-3`} src={`${ASSETS_API}/info4.jpeg`} alt="" />
+        <img className={`w-[100%] h-auto rounded-xl my-3`} src={`https://res.cloudinary.com/da9vcx3og/image/upload/v1722003024/mkebqhvedi94ztd9gfd2.jpg`} alt="" />
         <div className="flex justify-between items-center">
             <p>MiKaCasom</p>
             <p className='text-[#a4a4a4]'>miKaCasom.com</p>
