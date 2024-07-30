@@ -100,9 +100,7 @@ const Header = () => {
 
           {!isNonMobileScreens && isMobileMenuToggled ? (
             <div
-              className={`fixed right-0 bottom-0 h-[100%] z-10 max-w-[500px] min-w-[300px] bg-[#f2f3f8] ${
-                dark ? "bg-[#1b1b1b]" : "bg-[#f2f2f2]"
-              }`}
+              className={`fixed right-0 bottom-0 h-[100%] z-10 max-w-[500px] min-w-[300px] ${dark ? "bg-[#232323]" : "bg-[#f2f2f2]"}`}
             >
               <div className="flex justify-end p-4">
                 <IconButton
